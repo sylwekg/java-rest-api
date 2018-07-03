@@ -1,5 +1,6 @@
 package com.auth0.samples.authapi.task;
 
+import com.auth0.samples.authapi.user.Response;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,13 @@ public class TaskController {
 	}
 
 	@PostMapping
-	public void addTask(@RequestBody Task task) {
-		taskRepository.save(task);
+	public Response addTask(@RequestBody Task task) {
+		Task result = taskRepository.save(task);
+		if(result != null) {
+			return new Response("Item created", false, result);
+		} else {
+			return new Response("Database error - Item not saved", true);
+		}
 	}
 
 	@GetMapping

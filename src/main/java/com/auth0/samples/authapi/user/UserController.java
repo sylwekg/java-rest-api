@@ -1,10 +1,10 @@
 package com.auth0.samples.authapi.user;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -19,8 +19,17 @@ public class UserController {
 	}
 
 	@PostMapping("/sign-up")
-	public void signUp(@RequestBody ApplicationUser user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		applicationUserRepository.save(user);
+	public Response signUp(@RequestBody @Valid ApplicationUser user, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return new Response(bindingResult);
+		}
+		ApplicationUser existingUser = applicationUserRepository.findByUsername(user.getUsername());
+		if( existingUser == null){
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			ApplicationUser result = applicationUserRepository.save(user);
+			return new Response("User created",false, result);
+		} else {
+			return new Response("User already exist",true);
+		}
 	}
 }
