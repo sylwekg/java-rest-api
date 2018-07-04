@@ -3,6 +3,7 @@ package com.auth0.samples.authapi.task;
 import com.auth0.samples.authapi.user.ApplicationUser;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Task {
@@ -10,6 +11,7 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@NotNull
 	private String description;
 
 	@ManyToOne

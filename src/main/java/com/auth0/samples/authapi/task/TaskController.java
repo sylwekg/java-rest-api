@@ -30,11 +30,15 @@ public class TaskController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
 		task.setOwner(applicationUser);
-		Task result = taskRepository.save(task);
-		if(result != null) {
-			return new Response("Item created", false, result);
+		if(applicationUser != null) {
+			Task result = taskRepository.save(task);
+			if(result != null) {
+				return new Response("Item created", false, result);
+			} else {
+				return new Response("Database error - Item not saved", true);
+			}
 		} else {
-			return new Response("Database error - Item not saved", true);
+			return new Response("Please login", true);
 		}
 	}
 
@@ -44,15 +48,33 @@ public class TaskController {
 	}
 
 	@PutMapping("/{id}")
-	public void editTask(@PathVariable long id, @RequestBody Task task) {
+	public Response editTask(@PathVariable long id, @RequestBody Task task) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
 		Task existingTask = taskRepository.findOne(id);
 		Assert.notNull(existingTask, "Task not found");
-		existingTask.setDescription(task.getDescription());
-		taskRepository.save(existingTask);
+
+		if(existingTask.getOwner().getId()==applicationUser.getId()) {
+			existingTask.setDescription(task.getDescription());
+			taskRepository.save(existingTask);
+			return new Response("Task updated",false, existingTask);
+		} else {
+			return new Response("You are not the owner of the task", true);
+		}
 	}
 
 	@DeleteMapping("/{id}")
-	public void deleteTask(@PathVariable long id) {
-		taskRepository.delete(id);
+	public Response deleteTask(@PathVariable long id) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
+		Task existingTask = taskRepository.findOne(id);
+		Assert.notNull(existingTask, "Task not found");
+		if(existingTask.getOwner().getId()==applicationUser.getId()) {
+			taskRepository.delete(id);
+			return new Response("Task deleted",false);
+		} else {
+			return new Response("You are not the owner of the task", true);
+		}
+
 	}
 }

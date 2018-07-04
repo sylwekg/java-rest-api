@@ -13,6 +13,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 import static com.auth0.samples.authapi.security.SecurityConstants.SIGN_UP_URL;
 
 @EnableWebSecurity
@@ -27,14 +29,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-				.anyRequest().authenticated()
-				.and()
-				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-				.addFilter(new JWTAuthorizationFilter(authenticationManager()))
-				// this disables session creation on Spring Security
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable()
+			.authorizeRequests()
+			.antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+			.anyRequest().authenticated()
+			.and()
+			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+			.addFilter(new JWTAuthorizationFilter(authenticationManager()))
+			// this disables session creation on Spring Security
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
 	@Override
@@ -45,7 +48,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.applyPermitDefaultValues();
+		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedMethods(Arrays.asList("GET","POST","DELETE","PUT"));
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 
