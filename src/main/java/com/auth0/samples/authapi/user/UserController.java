@@ -23,13 +23,13 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			return new Response(bindingResult);
 		}
-		ApplicationUser existingUser = applicationUserRepository.findByUsername(user.getUsername());
+		ApplicationUser existingUser = applicationUserRepository.findByEmail(user.getEmail());
 		if( existingUser == null){
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			ApplicationUser result = applicationUserRepository.save(user);
 			return new Response("User created",false, result);
 		} else {
-			return new Response("User already exist",true);
+			return new Response("User e-mail already exist.",true);
 		}
 	}
 }
