@@ -1,16 +1,15 @@
 package com.auth0.samples.authapi.task;
 
+import com.auth0.samples.authapi.user.ApplicationUser;
+import com.auth0.samples.authapi.user.ApplicationUserRepository;
 import com.auth0.samples.authapi.user.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -19,12 +18,18 @@ public class TaskController {
 
 	private TaskRepository taskRepository;
 
+	@Autowired
+	private ApplicationUserRepository applicationUserRepository;
+
 	public TaskController(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
 	}
 
 	@PostMapping
-	public Response addTask(@RequestBody Task task) {
+	public Response addTask(@RequestBody Task task, Principal principal) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
+		task.setOwner(applicationUser);
 		Task result = taskRepository.save(task);
 		if(result != null) {
 			return new Response("Item created", false, result);

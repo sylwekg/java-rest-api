@@ -1,16 +1,19 @@
 package com.auth0.samples.authapi.task;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.auth0.samples.authapi.user.ApplicationUser;
+
+import javax.persistence.*;
 
 @Entity
 public class Task {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+
 	private String description;
+
+	@ManyToOne
+	private ApplicationUser owner;
 
 	protected Task() { }
 
@@ -28,5 +31,13 @@ public class Task {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public ApplicationUser getOwner() {
+		return owner;
+	}
+
+	public void setOwner(ApplicationUser owner) {
+		this.owner = owner;
 	}
 }
