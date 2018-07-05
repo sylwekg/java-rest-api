@@ -9,13 +9,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-
 	private TaskRepository taskRepository;
 
 	@Autowired
@@ -26,7 +24,7 @@ public class TaskController {
 	}
 
 	@PostMapping
-	public Response addTask(@RequestBody Task task, Principal principal) {
+	public Response addTask(@RequestBody Task task) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
 		task.setOwner(applicationUser);
@@ -75,6 +73,5 @@ public class TaskController {
 		} else {
 			return new Response("You are not the owner of the task", true);
 		}
-
 	}
 }

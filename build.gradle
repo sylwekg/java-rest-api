@@ -14,6 +14,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -27,7 +28,11 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile("org.springframework.boot:spring-boot-starter-security")
-	compile("org.hsqldb:hsqldb")
+//	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.1.Final'
+	runtime('org.springframework.boot:spring-boot-devtools')
+	runtime('mysql:mysql-connector-java')
+
+//	compile("org.hsqldb:hsqldb")
 	compile("io.jsonwebtoken:jjwt:0.7.0")
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
