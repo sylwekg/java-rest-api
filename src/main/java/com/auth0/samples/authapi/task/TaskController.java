@@ -42,7 +42,9 @@ public class TaskController {
 
 	@GetMapping
 	public List<Task> getTasks() {
-		return taskRepository.findAll();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
+		return taskRepository.findByOwner(applicationUser);
 	}
 
 	@PutMapping("/{id}")

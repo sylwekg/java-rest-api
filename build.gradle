@@ -28,12 +28,10 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile("org.springframework.boot:spring-boot-starter-security")
+	compile('mysql:mysql-connector-java')
+	compile("io.jsonwebtoken:jjwt:0.7.0")
 //	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.1.Final'
 	runtime('org.springframework.boot:spring-boot-devtools')
-	runtime('mysql:mysql-connector-java')
-
-//	compile("org.hsqldb:hsqldb")
-	compile("io.jsonwebtoken:jjwt:0.7.0")
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
