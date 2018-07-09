@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	List<Task> findByOwner(ApplicationUser applicationUser);
+	Task findById(long id);
 }

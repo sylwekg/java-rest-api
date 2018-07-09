@@ -1,5 +1,6 @@
 package com.auth0.samples.authapi.user;
 
+import com.auth0.samples.authapi.util.Response;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

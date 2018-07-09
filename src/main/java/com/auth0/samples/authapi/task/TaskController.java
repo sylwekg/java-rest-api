@@ -2,7 +2,7 @@ package com.auth0.samples.authapi.task;
 
 import com.auth0.samples.authapi.user.ApplicationUser;
 import com.auth0.samples.authapi.user.ApplicationUserRepository;
-import com.auth0.samples.authapi.user.Response;
+import com.auth0.samples.authapi.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,7 +51,7 @@ public class TaskController {
 	public Response editTask(@PathVariable long id, @RequestBody Task task) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
-		Task existingTask = taskRepository.findOne(id);
+		Task existingTask = taskRepository.findById(id);
 		Assert.notNull(existingTask, "Task not found");
 
 		if(existingTask.getOwner().getId()==applicationUser.getId()) {
@@ -67,10 +67,11 @@ public class TaskController {
 	public Response deleteTask(@PathVariable long id) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		ApplicationUser applicationUser = applicationUserRepository.findByEmail(auth.getName());
-		Task existingTask = taskRepository.findOne(id);
+		Task existingTask = taskRepository.findById(id);
 		Assert.notNull(existingTask, "Task not found");
+
 		if(existingTask.getOwner().getId()==applicationUser.getId()) {
-			taskRepository.delete(id);
+			taskRepository.delete(existingTask);
 			return new Response("Task deleted",false);
 		} else {
 			return new Response("You are not the owner of the task", true);

@@ -1,4 +1,4 @@
-package com.auth0.samples.authapi.user;
+package com.auth0.samples.authapi.util;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

@@ -6,7 +6,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
 	}
 }
 
@@ -16,8 +16,14 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
+bootJar {
+	baseName = 'spring-boot-auth'
+	version =  '0.2.0'
+}
+
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
 	mavenCentral()
@@ -30,8 +36,6 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-security")
 	compile('mysql:mysql-connector-java')
 	compile("io.jsonwebtoken:jjwt:0.7.0")
-//	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.1.Final'
 	runtime('org.springframework.boot:spring-boot-devtools')
-
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
